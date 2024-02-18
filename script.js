@@ -25,77 +25,98 @@ function playRound(playerSelection, computerSelection) {
   }
 }
 
-// function playGame() {
-//   let playerScore = 0;
-//   let computerScore = 0;
-//   for (let i = 0; i < 5; i++) {
-//     let playerSelection = prompt("Enter you choice: ");
-//     let computerSelection = getComputerChoice();
-//     let roundOutcome = playRound(playerSelection, computerSelection);
-//     console.log(roundOutcome);
-
-//     let result = roundOutcome.split('!');
-//     if (result[0] == "You Win") {
-//       playerScore++;
-//     }
-
-//     else if (result[0] == "You Lose") {
-//       computerScore++;
-//     }
-//   }
-//   if (playerScore > computerScore) {
-//     return "Player wins!";
-//   }
-//   else if (playerScore < computerScore) {
-//     return "Computer wins!";
-//   }
-//   return "Tie Game!"
-// }
-
-// console.log(playGame());
-
-// let playerSelection = prompt("Enter you choice: ");
-// let computerSelection = getComputerChoice();
-// console.log(alert(playRound(playerSelection, computerSelection)));
 
 let myDiv = document.querySelector('#mainDiv');
+let playerChoice;
+let opponentChoice;
 let result;
 
-let outputDiv = document.createElement('h3');
+let outputDiv = document.createElement('h2');
 
 function createButton(buttonText) {
   let button = document.createElement('BUTTON');
   let text = document.createTextNode(buttonText);
   button.appendChild(text);
   button.style.cssText = "color:white";
-  button.style.margin = "10px";
+  button.style.margin = "20px";
   button.style.padding = "10px";
+  button.style.fontSize = "25px";
   button.style.backgroundColor = "black";
   button.id = buttonText;
-
+  button.style.borderRadius = "8px";
+  button.style.width = "150px";
   myDiv.appendChild(button);
 }
 
 createButton("Rock");
 createButton("Paper");
 createButton("Scissor");
-
 myDiv.appendChild(outputDiv);
 
-document.getElementById("Rock").addEventListener("click", () => {
-  result = playRound("Rock", getComputerChoice());
-  outputDiv.textContent = result;
+let rockBtn = document.getElementById("Rock");
+let paperBtn = document.getElementById("Paper");
+let scissorBtn = document.getElementById("Scissor");
+
+rockBtn.addEventListener("click", () => {
+  playerChoice = "Rock";
+  opponentChoice = getComputerChoice();
+  playGame(playerChoice);
 })
 
-document.getElementById("Paper").addEventListener("click", () => {
-  result = playRound("Paper", getComputerChoice());
-  outputDiv.textContent = result;
+paperBtn.addEventListener("click", () => {
+  playerChoice = "Paper";
+  opponentChoice = getComputerChoice();
+  playGame(playerChoice);
 })
 
-document.getElementById("Scissor").addEventListener("click", () => {
-  result = playRound("Scissor", getComputerChoice());
-  outputDiv.textContent = result;
+scissorBtn.addEventListener("click", () => {
+  playerChoice = "Scissor";
+  opponentChoice = getComputerChoice();
+  playGame(playerChoice);
 })
 
+let playerScore = 0;
+let computerScore = 0;
+function playGame(player) {
+  let roundOutcome = playRound(playerChoice, opponentChoice);
 
+  let outcomeList = roundOutcome.split('!');
+  if (outcomeList[0] == "You Win") {
+    playerScore++;
+  }
 
+  else if (outcomeList[0] == "You Lose") {
+    computerScore++;
+  }
+
+  result = "\nYour choice: " + playerChoice + "\n\nComputer's choice: " + opponentChoice + '\n\n' + roundOutcome;
+  result += "\n\nPlayer Score: " + playerScore + "\nComputer Score: " + computerScore;
+  outputDiv.textContent = result;
+
+  if (playerScore == 5 || computerScore == 5) {
+    rockBtn.disabled = true;
+    paperBtn.disabled = true;
+    scissorBtn.disabled = true;
+    if (playerScore > computerScore) {
+      outputDiv.textContent += "\n\nPlayer wins!\n";
+    }
+    else if (playerScore < computerScore) {
+      outputDiv.textContent += "\n\nComputer wins!\n";
+    }
+    else {
+      outputDiv.textContent += "Tie Game!\n";
+    }
+
+    let resetBtn = document.createElement('BUTTON');
+    resetBtn.textContent = "Play Again!"
+    resetBtn.style.cssText = "color:white";
+    resetBtn.style.margin = "20px";
+    resetBtn.style.padding = "10px";
+    resetBtn.style.fontSize = "25px";
+    resetBtn.style.backgroundColor = "rgb(123,123,160)";
+    resetBtn.addEventListener("click", () => {
+      window.location.reload();
+    });
+    outputDiv.appendChild(resetBtn);
+  }
+}
